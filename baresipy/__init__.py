@@ -224,7 +224,7 @@ class BareSIP(Thread):
             sound += AudioSegment.silent(duration=500)
 
         outfile = outfile or join(tempfile.gettempdir(), "pybaresip.wav")
-        sound = sound.set_frame_rate(48000)
+        sound = sound.set_frame_rate(8000)
         sound = sound.set_channels(2)
         sound.export(outfile, format="wav")
         return outfile, sound.duration_seconds
