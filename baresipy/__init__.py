@@ -192,6 +192,15 @@ class BareSIP(Thread):
         ToneGenerator().dtmf_to_wave(number, dtmf)
         self.send_audio(dtmf)
 
+    def send_dtmf_event(self, number):
+        number = str(number)
+        for n in number:
+            if n not in "0123456789*#":
+                LOG.error("invalid dtmf event")
+                return
+        LOG.info("Sending dtmf event for " + number)
+        self.do_command(number)
+        
     def speak(self, speech):
         if not self.call_established:
             LOG.error("Speaking without an active call!")
