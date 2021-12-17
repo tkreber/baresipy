@@ -73,7 +73,7 @@ class BareSIP(Thread):
                 p=self.pwd,
                 g=self.gateway,
                 s='tls',
-                enc='srtp'
+                enc='srtp-mand'
             )
         else:
             # Fallback to no-TLS
