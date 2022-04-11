@@ -213,7 +213,17 @@ class BareSIP(Thread):
                 return
         LOG.info("Sending dtmf event for " + number)
         self.do_command(number)
-        
+
+    def set_headers(self, headers):
+        for header, value in headers.items():
+            LOG.info(f"Set SIP header {header}={value}")
+            self.do_command(f"/uaaddheader {header}={value} 0")
+    
+    def unset_headers(self, headers):
+        for header, value in headers.items():
+            LOG.info(f"Unset SIP header {header}={value}")
+            self.do_command(f"/uarmheader {header}={value} 0")
+            
     def speak(self, speech):
         if not self.call_established:
             LOG.error("Speaking without an active call!")
