@@ -21,7 +21,7 @@ logging.getLogger("pydub.converter").setLevel("WARN")
 
 class BareSIP(Thread):
     def __init__(self, user, pwd, gateway, tts=None, debug=False,
-                 block=True, config_path=None, sounds_path=None):
+                 block=True, config_path=None, sounds_path=None, **kwargs):
         config_path = config_path or join("~", ".baresipy")
         self.config_path = expanduser(config_path)
         if not isdir(self.config_path):
@@ -65,7 +65,20 @@ class BareSIP(Thread):
             self.tts = tts
         else:
             self.tts = ResponsiveVoice(gender=ResponsiveVoice.MALE)
-        self._login = "sip:{u}@{g};auth_pass={p}".format(u=self.user, p=self.pwd,
+        
+        # Check TLS
+        tls = kwargs.get('tls')
+        if tls:
+            self._login = "sip:{u}@{g};auth_pass={p};transport={s};mediaenc={enc}".format(
+                u=self.user,
+                p=self.pwd,
+                g=self.gateway,
+                s='tls',
+                enc='srtp-mand'
+            )
+        else:
+            # Fallback to no-TLS
+            self._login = "sip:{u}@{g};auth_pass={p}".format(u=self.user, p=self.pwd,
                                                g=self.gateway)
         self._prev_output = ""
         self.running = False
@@ -193,6 +206,25 @@ class BareSIP(Thread):
         ToneGenerator().dtmf_to_wave(number, dtmf)
         self.send_audio(dtmf)
 
+    def send_dtmf_event(self, number):
+        number = str(number)
+        for n in number:
+            if n not in "0123456789*#":
+                LOG.error("invalid dtmf event")
+                return
+        LOG.info("Sending dtmf event for " + number)
+        self.do_command(number)
+
+    def set_headers(self, headers):
+        for header, value in headers.items():
+            LOG.info(f"Set SIP header {header}={value}")
+            self.do_command(f"/uaaddheader {header}={value} 0")
+    
+    def unset_headers(self, headers):
+        for header, value in headers.items():
+            LOG.info(f"Unset SIP header {header}={value}")
+            self.do_command(f"/uarmheader {header}={value} 0")
+            
     def speak(self, speech):
         if not self.call_established:
             LOG.error("Speaking without an active call!")
@@ -225,7 +257,7 @@ class BareSIP(Thread):
             sound += AudioSegment.silent(duration=500)
 
         outfile = outfile or join(tempfile.gettempdir(), "pybaresip.wav")
-        sound = sound.set_frame_rate(48000)
+        sound = sound.set_frame_rate(8000)
         sound = sound.set_channels(2)
         sound.export(outfile, format="wav")
         return outfile, sound.duration_seconds
