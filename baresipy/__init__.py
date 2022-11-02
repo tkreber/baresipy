@@ -32,7 +32,15 @@ class BareSIP(Thread):
             LOG.info("config loaded from " + self.config_path + "/config")
             self.updated_config = False
         else:
-            self.config = baresipy.config.DEFAULT
+            # load initial configuration from baresip
+            baresip_config_path = join("~", ".baresip")
+            baresip_config_path = expanduser(baresip_config_path)
+            if isfile(join(baresip_config_path, "config")):
+                with open(join(baresip_config_path, "config"), "r") as baresip_file:
+                    self.config = baresip_file.read()
+                LOG.info("config loaded from " + baresip_config_path + "/config")
+            else:
+                self.config = baresipy.config.DEFAULT
             self.updated_config = True
 
         self._original_config = str(self.config)
