@@ -18,12 +18,18 @@ brew install baresip ffmpeg           # macOS
 then install baresipy for your user (no sudo, no virtualenv needed):
 
 ```bash
-make install
+pip install --user --break-system-packages .
 ```
 
-`make install` builds and installs baresipy into your user site, so
-`import baresipy` works from any script. Other targets: `make dev`
-(editable install for development), `make uninstall`, `make clean`.
+This builds and installs baresipy into your user site (via the
+poetry-core backend declared in `pyproject.toml`), so `import baresipy`
+works from any script. Only `pip` is required — no poetry, no make.
+
+if you have `make`, the same thing is available as a shortcut:
+
+```bash
+make install   # also: make dev (editable), make uninstall, make clean
+```
 
 # usage
 
