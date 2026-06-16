@@ -8,18 +8,22 @@ Make voip calls/bots from python!
 
 # install
 
-```bash
-sudo apt-get install baresip
-sudo apt-get install ffmpeg
-pip install baresipy
-```
-
-from source (using [poetry](https://python-poetry.org/)):
+system dependencies:
 
 ```bash
-sudo apt-get install baresip ffmpeg
-poetry install
+sudo apt-get install baresip ffmpeg   # debian/ubuntu
+brew install baresip ffmpeg           # macOS
 ```
+
+then install baresipy for your user (no sudo, no virtualenv needed):
+
+```bash
+make install
+```
+
+`make install` builds and installs baresipy into your user site, so
+`import baresipy` works from any script. Other targets: `make dev`
+(editable install for development), `make uninstall`, `make clean`.
 
 # usage
 
