@@ -1,0 +1,30 @@
+[project]
+name = "baresipy"
+version = "0.1.5"
+description = "python baresip wrapper"
+authors = [
+    { name = "jarbasAI", email = "jarbasai@mailfence.com" },
+]
+license = "MIT"
+readme = "readme.md"
+requires-python = ">=3.8"
+dependencies = [
+    "ResponsiveVoice",
+    "opentone>=0.1.2",
+    "pydub",
+    "pexpect",
+    "json_database>=0.1.2",
+    "audioop-lts; python_version >= '3.13'",
+]
+
+[project.urls]
+Homepage = "https://github.com/JarbasAl/baresipy"
+
+[tool.poetry]
+packages = [
+    { include = "baresipy" },
+]
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"

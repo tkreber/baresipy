@@ -14,6 +14,13 @@ sudo apt-get install ffmpeg
 pip install baresipy
 ```
 
+from source (using [poetry](https://python-poetry.org/)):
+
+```bash
+sudo apt-get install baresip ffmpeg
+poetry install
+```
+
 # usage
 
 scripted calls
